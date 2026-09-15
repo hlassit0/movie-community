@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: movie-community-postgres
+    environment:
+      POSTGRES_USER: movie_user
+      POSTGRES_PASSWORD: movie_password
+      POSTGRES_DB: movie_community
+    ports:
+      - "5432:5432"
+    volumes:
+      - movie-community-data:/var/lib/postgresql/data
+
+volumes:
+  movie-community-data:
