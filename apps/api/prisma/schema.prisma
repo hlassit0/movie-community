@@ -8,26 +8,35 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String      @id @default(cuid())
+  email     String      @unique
   name      String
-  createdAt DateTime @default(now())
+  handle    String      @unique
+  avatarUrl String?
+  createdAt DateTime    @default(now())
   ratings   Rating[]
   reviews   Review[]
+  watchlist Watchlist[]
 }
 
 model Movie {
-  id            String   @id @default(cuid())
-  externalId    String?  @unique
+  id            String      @id @default(cuid())
+  externalId    String?     @unique
   title         String
   year          Int
   overview      String
   posterUrl     String?
+  backdropUrl   String?
   genres        String[]
-  averageRating Float    @default(0)
+  runtime       Int?
+  director      String?
+  cast          String[]    @default([])
+  averageRating Float       @default(0)
+  ratingCount   Int         @default(0)
   ratings       Rating[]
   reviews       Review[]
-  createdAt     DateTime @default(now())
+  watchlist     Watchlist[]
+  createdAt     DateTime    @default(now())
 }
 
 model Rating {
@@ -48,4 +57,14 @@ model Review {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  movieId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  @@unique([userId, movieId])
 }
